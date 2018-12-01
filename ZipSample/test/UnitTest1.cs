@@ -51,35 +51,53 @@ namespace ZipSample.test
                 return true;
             }
 
-            new Dictionary<int, Func<string, bool>>
+            var dictionary = new Dictionary<int, Func<string, bool>>
             {
                 {106, (c) => IsNumber(c, 1, 11)},
+                { 107,(c)=>Is107Content(c) && IsNumber(c,1,14) && NumberNotContain(c)}
             };
-            if (Year==106)
-            {
-                var content = Convert.ToInt32(Content);
-                if (content>=1  && content<=11)
-                {
-                    return true;
-                }
-            }
-            if (Year == 107)
-            {
-                if (Content=="2a"||Content=="2b")
-                {
-                    return true;
-                }
-                if (Int32.TryParse(Content, out var content))
-                {
-                    if ((content >= 1 || content <= 14) && (content != 2 && content != 12))
-                    {
-                        return true;
-                    }
-                }
+            return dictionary[Year](Content);
+            //if (Year==106)
+            //{
+            //    var content = Convert.ToInt32(Content);
+            //    if (content>=1  && content<=11)
+            //    {
+            //        return true;
+            //    }
+            //}
+            //if (Year == 107)
+            //{
+            //    if (Content=="2a"||Content=="2b")
+            //    {
+            //        return true;
+            //    }
+            //    if (Int32.TryParse(Content, out var content))
+            //    {
+            //        if ((content >= 1 || content <= 14) && (content != 2 && content != 12))
+            //        {
+            //            return true;
+            //        }
+            //    }
 
-               
+
+            //}
+        }
+
+        private bool NumberNotContain(string content)
+        {
+            if (Int32.TryParse(content, out var number))
+            {
+                if  (number != 2 && number != 12)
+                {
+                    return true;
+                }
             }
             return false;
+        }
+
+        private bool Is107Content(string content)
+        {
+            return content == "2a" || content == "2b";
         }
 
         private bool IsNumber(string c, int i, int i1)
@@ -95,9 +113,6 @@ namespace ZipSample.test
             return false;
         }
 
-        private static bool IsNumber(string c)
-        {
-            return c=="2a"||c=="2b";
-        }
+        
     }
 }
