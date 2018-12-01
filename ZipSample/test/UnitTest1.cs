@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -41,63 +42,45 @@ namespace ZipSample.test
 
         public bool IsValid()
         {
-            if (Year != 106 && Year != 107)
-            {
-                return false;
-            }
-
-            if (Content=="99")
-            {
-                return true;
-            }
-
             var dictionary = new Dictionary<int, Func<string, bool>>
             {
-                {106, (c) => IsNumber(c, 1, 11)},
-                { 107,(c)=>Is107Content(c) && IsNumber(c,1,14) && NumberNotContain(c)}
+                {106, Valid106Content},
+                {107, Valid107Content}
             };
-            return dictionary[Year](Content);
-            //if (Year==106)
-            //{
-            //    var content = Convert.ToInt32(Content);
-            //    if (content>=1  && content<=11)
-            //    {
-            //        return true;
-            //    }
-            //}
-            //if (Year == 107)
-            //{
-            //    if (Content=="2a"||Content=="2b")
-            //    {
-            //        return true;
-            //    }
-            //    if (Int32.TryParse(Content, out var content))
-            //    {
-            //        if ((content >= 1 || content <= 14) && (content != 2 && content != 12))
-            //        {
-            //            return true;
-            //        }
-            //    }
+            return dictionary.ContainsKey(Year) && dictionary[Year](Content);
+        }
 
 
-            //}
+        private bool Valid107Content(string c)
+        {
+            var list = Enumerable.Range(1, 14).Except(new[] { 2, 12 }).Select(x => x.ToString()).ToList();
+            list.AddRange(new[] { "99", "2a", "2b" });
+            return list.Contains(c);
+        }
+
+        private static bool Valid106Content(string content)
+        {
+            if (int.TryParse(content, out var number))
+            {
+                if ((number >= 1 && number <= 11) || number == 99)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool NumberNotContain(string content)
         {
             if (Int32.TryParse(content, out var number))
             {
-                if  (number != 2 && number != 12)
+                if (number != 2 && number != 12)
                 {
                     return true;
                 }
             }
             return false;
-        }
-
-        private bool Is107Content(string content)
-        {
-            return content == "2a" || content == "2b";
         }
 
         private bool IsNumber(string c, int i, int i1)
@@ -113,6 +96,6 @@ namespace ZipSample.test
             return false;
         }
 
-        
+
     }
 }

@@ -4,26 +4,26 @@ namespace ZipSample.test
 {
     public class LuluMapper
     {
-        public TResult CreatedBetDto<TSource, TResult>(TSource bet, Func<TSource, TResult> selector)
+        public TResult Mapper<TSource, TResult>(TSource bet, Func<TSource, TResult> selector)
         {
             return selector(bet);
         }
 
-        public TResult CreatedBetDto<TSource, TResult>(TSource bet, IMapper<TSource, TResult> mapper)
+        public TResult Mapper<TSource, TResult>(TSource bet, IMapper<TSource, TResult> mapper)
         {
             return mapper.Map(bet);
         }
 
-        public BetDto CreatedBetDto<TSource>(TSource bet)
+        public TResult Mapper<TSource, TResult>(TSource bet)
         {
-            return new BetDto
+            var resultProperties = typeof(TResult).GetProperties();
+            var result = Activator.CreateInstance(typeof(TResult));
+            foreach (var property in resultProperties)
             {
-                BetId =  (int) bet.GetType().GetProperty("BetId").GetValue(bet),
-                Date = (string) bet.GetType().GetProperty("Date").GetValue(bet),
-                Amount = (int) bet.GetType().GetProperty("Amount").GetValue(bet),
-                Status = (string) bet.GetType().GetProperty("Status").GetValue(bet),
-            };
-           
+                var value = bet.GetType().GetProperty(property.Name)?.GetValue(bet);
+                result.GetType().GetProperty(property.Name).SetValue(result,value);
+            }
+            return (TResult) result;
         }
     }
 }

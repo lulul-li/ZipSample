@@ -11,7 +11,7 @@ namespace ZipSample.test
     {
         private readonly LuluMapper _luluMapper = new LuluMapper();
 
-        [TestMethod]
+        [Test]
         public void test()
         {
             var bet = new Bet()
@@ -21,7 +21,7 @@ namespace ZipSample.test
                 Stake = 10m
 
             };
-            var betDto = _luluMapper.CreatedBetDto(bet,
+            var betDto = _luluMapper.Mapper(bet,
                 b => new BetDto
                 {
                     BetId = b.Id,
@@ -39,8 +39,8 @@ namespace ZipSample.test
             expected.ToExpectedObject().ShouldEqual(betDto);
         }
 
-        [TestMethod]
-        public void test2()
+        [Test]
+        public void map_class_with_mapper()
         {
             var bet = new Bet()
             {
@@ -50,7 +50,7 @@ namespace ZipSample.test
 
             };
 
-            var betDto = _luluMapper.CreatedBetDto(bet, new Mapper());
+            var betDto = _luluMapper.Mapper(bet, new Mapper());
 
             var expected = new BetDto()
             {
@@ -62,8 +62,8 @@ namespace ZipSample.test
             expected.ToExpectedObject().ShouldEqual(betDto);
         }
 
-        [TestMethod]
-        public void test3()
+        [Test]
+        public void mapper_with_properties()
         {
             var bet = new Bet()
             {
@@ -73,7 +73,7 @@ namespace ZipSample.test
                 Status="success"
             };
 
-            var betDto = _luluMapper.CreatedBetDto(bet);
+            var betDto = _luluMapper.Mapper<Bet, BetDto>(bet);
 
             var expected = new BetDto()
             {
@@ -82,40 +82,5 @@ namespace ZipSample.test
 
             expected.ToExpectedObject().ShouldEqual(betDto);
         }
-    }
-
-    public class Mapper : IMapper<Bet, BetDto>
-    {
-        public BetDto Map(Bet bet)
-        {
-            return new BetDto
-            {
-                BetId = bet.Id,
-                Date = bet.CreatedDate.ToString("yyyyMMdd"),
-                Amount = (int)bet.Stake
-            };
-        }
-
-    }
-
-    public interface IMapper<in TSource, out TResult>
-    {
-        TResult Map(TSource bet);
-    }
-
-    public class Bet
-    {
-        public int Id { get; set; }
-        public decimal Stake { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string Status { get; set; }
-    }
-
-    public class BetDto
-    {
-        public int BetId { get; set; }
-        public string Date { get; set; }
-        public int Amount { get; set; }
-        public string Status { get; set; }
     }
 }

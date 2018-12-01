@@ -57,8 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Entities.cs" />
+    <Compile Include="test\Bet.cs" />
+    <Compile Include="test\BetDto.cs" />
     <Compile Include="test\BetTest.cs" />
+    <Compile Include="test\IMapper.cs" />
     <Compile Include="test\LuluMapper.cs" />
+    <Compile Include="test\Mapper.cs" />
     <Compile Include="test\Repository.cs" />
     <Compile Include="test\UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
