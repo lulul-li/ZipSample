@@ -51,10 +51,10 @@ namespace ZipSample.test
                 return true;
             }
 
-            //new Dictionary<int,Func<string,bool>>
-            //{
-            //    { 106,(c)=> c=="2a"||c=="2b"},
-            //}
+            new Dictionary<int, Func<string, bool>>
+            {
+                {106, (c) => IsNumber(c, 1, 11)},
+            };
             if (Year==106)
             {
                 var content = Convert.ToInt32(Content);
@@ -80,6 +80,24 @@ namespace ZipSample.test
                
             }
             return false;
+        }
+
+        private bool IsNumber(string c, int i, int i1)
+        {
+            if (Int32.TryParse(c, out var content))
+            {
+                if (content >= i && content <= i1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsNumber(string c)
+        {
+            return c=="2a"||c=="2b";
         }
     }
 }
